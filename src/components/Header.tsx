@@ -57,9 +57,6 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => window.location.href = '/dashboard'}>
-                    Dashboard
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={signOut}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out

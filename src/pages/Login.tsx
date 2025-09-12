@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -25,6 +26,7 @@ const Login = () => {
   const { toast } = useToast();
   const { signIn, signUp, user } = useAuth();
   const navigate = useNavigate();
+  const [forgotOpen, setForgotOpen] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -86,9 +88,9 @@ const Login = () => {
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
               <span className="text-primary font-bold text-xl">M</span>
             </div>
-            <span className="text-2xl font-bold text-white">MockRank</span>
+            <span className="text-2xl font-bold text-foreground">MockRank</span>
           </div>
-          <Badge className="bg-white/20 text-white border-white/30">
+          <Badge className="bg-white/20 text-foreground border border-border">
             AI-Powered Interview Platform
           </Badge>
         </div>
@@ -147,6 +149,17 @@ const Login = () => {
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
+                    </div>
+                    <div className="flex justify-end mt-1">
+                      <Button
+                        type="button"
+                        variant="link"
+                        size="sm"
+                        className="text-xs p-0 h-auto"
+                        onClick={() => setForgotOpen(true)}
+                      >
+                        Forgot Password?
                       </Button>
                     </div>
                   </div>
@@ -251,13 +264,22 @@ const Login = () => {
                       <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                       <Input
                         id="signupPassword"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         placeholder="••••••••"
-                        className="pl-10"
+                        className="pl-10 pr-10"
                         value={signupForm.password}
                         onChange={(e) => setSignupForm({...signupForm, password: e.target.value})}
                         required
                       />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </Button>
                     </div>
                   </div>
                   
@@ -270,10 +292,11 @@ const Login = () => {
           </CardContent>
         </Card>
         
-        <p className="text-center text-sm text-white/70 mt-6">
+        <p className="text-center text-sm text-muted-foreground mt-6">
           By signing up, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
+      <ForgotPasswordDialog open={forgotOpen} onOpenChange={setForgotOpen} onPasswordReset={() => setForgotOpen(false)} />
     </div>
   );
 };

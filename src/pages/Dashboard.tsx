@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,6 +26,23 @@ import {
 
 const Dashboard = () => {
   const [selectedGoal, setSelectedGoal] = useState<'placement' | 'ias'>('placement');
+  const { user } = useAuth();
+  const [firstName, setFirstName] = useState<string>("");
+  const fetched = useRef(false);
+
+  useEffect(() => {
+    if (user && !fetched.current) {
+      fetched.current = true;
+      supabase
+        .from('profiles')
+        .select('first_name')
+        .eq('user_id', user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.first_name) setFirstName(data.first_name);
+        });
+    }
+  }, [user]);
   
   const stats = {
     totalInterviews: 12,
@@ -101,7 +120,7 @@ const Dashboard = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h1 className="text-3xl font-bold">Welcome back, Rahul!</h1>
+                  <h1 className="text-3xl font-bold">Welcome{firstName ? `, ${firstName}!` : "!"}</h1>
                   <p className="text-muted-foreground">Ready for your next mock interview?</p>
                 </div>
                 <Badge className="gradient-secondary text-white border-0">
@@ -132,7 +151,7 @@ const Dashboard = () => {
 
             {/* Quick Actions */}
             <div className="grid md:grid-cols-2 gap-4">
-              <Card className="gradient-card border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer" onClick={() => window.location.href = '/interview'}>
+              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer" onClick={() => window.location.href = '/interview'}>
                 <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                   <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center">
                     <Play className="w-6 h-6 text-white" />
@@ -143,8 +162,7 @@ const Dashboard = () => {
                   </div>
                 </CardHeader>
               </Card>
-              
-              <Card className="gradient-card border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer">
+              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer">
                 <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                   <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
                     <FileText className="w-6 h-6 text-accent" />
