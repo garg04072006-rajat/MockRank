@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { Menu, Sun, Moon, LogOut, User } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { 
   DropdownMenu,
   DropdownMenuContent,
@@ -12,6 +13,7 @@ import {
 const Header = () => {
   const { theme, setTheme } = useTheme();
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
@@ -65,10 +67,10 @@ const Header = () => {
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="ghost" className="hidden md:inline-flex" onClick={() => window.location.href = '/login'}>
+                <Button variant="ghost" className="hidden md:inline-flex" onClick={() => navigate('/login')}>
                   Sign In
                 </Button>
-                <Button className="gradient-primary text-white border-0 hover:shadow-glow transition-smooth" onClick={() => window.location.href = '/login'}>
+                <Button className="gradient-primary text-white border-0 hover:shadow-glow transition-smooth" onClick={() => navigate('/login')}>
                   Get Started
                 </Button>
               </>

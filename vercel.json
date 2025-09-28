@@ -17,7 +17,25 @@
       }
     },
     {
+      "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml)",
+      "headers": {
+        "cache-control": "max-age=86400"
+      }
+    },
+    {
       "handle": "filesystem"
+    },
+    {
+      "src": "/login",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/interview",
+      "dest": "/index.html"
     },
     {
       "src": "/(.*)",
