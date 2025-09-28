@@ -147,6 +147,15 @@ const MockInterview = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
               </Button>
+              
+              {/* MockRank Logo */}
+              <div className="flex items-center justify-center space-x-2 mb-4">
+                <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-xl">M</span>
+                </div>
+                <span className="text-2xl font-bold text-foreground">MockRank</span>
+              </div>
+              
               <h1 className="text-3xl font-bold">Mock Interview Setup</h1>
               <p className="text-muted-foreground">Select your interviewer and get ready to practice</p>
             </div>
@@ -324,6 +333,14 @@ const MockInterview = () => {
         <div className="bg-card border-b border-border p-4">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
+              {/* MockRank Logo */}
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 gradient-primary rounded-md flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">M</span>
+                </div>
+                <span className="text-lg font-bold text-foreground">MockRank</span>
+              </div>
+              
               <Badge className="gradient-primary text-white border-0">
                 <Clock className="w-4 h-4 mr-1" />
                 {formatTime(timeElapsed)}
@@ -485,6 +502,14 @@ const MockInterview = () => {
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-2xl shadow-strong">
         <CardHeader className="text-center">
+          {/* MockRank Logo */}
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <div className="w-10 h-10 gradient-primary rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-xl">M</span>
+            </div>
+            <span className="text-2xl font-bold text-foreground">MockRank</span>
+          </div>
+          
           <CardTitle className="text-2xl">Interview Completed!</CardTitle>
           <CardDescription>Great job! Here's your performance summary</CardDescription>
         </CardHeader>

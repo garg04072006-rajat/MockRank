@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
-import Dashboard from "./pages/Intro";
+import Dashboard from "./pages/Dashboard";
 import MockInterview from "./pages/MockInterview";
 import NotFound from "./pages/NotFound";
 

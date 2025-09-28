@@ -6,7 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 interface AuthContextType {
   user: User | null;
   session: Session | null;
-  signUp: (email: string, password: string, userData: any) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, userData: any) => Promise<{ error: any; data?: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   loading: boolean;
@@ -50,38 +50,55 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signUp = async (email: string, password: string, userData: any) => {
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
+      setLoading(true);
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirectUrl,
-          data: userData
+          emailRedirectTo: undefined, // Disable email confirmation
+          data: {
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            phone: userData.phone,
+            full_name: `${userData.first_name} ${userData.last_name}`
+          }
         }
       });
 
       if (error) {
+        console.error('Signup error:', error);
         toast({
           title: "Sign Up Error",
-          description: error.message,
+          description: error.message || "Failed to create account. Please try again.",
           variant: "destructive",
         });
-      } else {
-        toast({
-          title: "Account Created!",
-          description: "Please check your email to verify your account.",
-        });
+      } else if (data?.user) {
+        // Check if user is immediately confirmed (no email verification needed)
+        if (data.user.email_confirmed_at || data.session) {
+          toast({
+            title: "Account Created!",
+            description: "Account created successfully. You can now log in.",
+          });
+        } else {
+          toast({
+            title: "Account Created!",
+            description: "Account created! You can now log in with your credentials.",
+            variant: "default",
+          });
+        }
       }
 
-      return { error };
+      return { error, data };
     } catch (error: any) {
+      console.error('Signup catch error:', error);
       toast({
         title: "Sign Up Error", 
-        description: error.message,
+        description: error.message || "An unexpected error occurred. Please try again.",
         variant: "destructive",
       });
       return { error };
+    } finally {
+      setLoading(false);
     }
   };
 

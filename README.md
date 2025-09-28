@@ -1,40 +1,35 @@
-# Welcome to your Lovable project
+# MockRank
 
-## Project info
+AI-Powered Interview Platform
 
-**URL**: https://lovable.dev/projects/ffa4bd3c-b41f-4081-90b0-2687c3229cd2
+This is a modern web application built with React, TypeScript, and Vite, featuring a beautiful UI with Tailwind CSS and shadcn/ui components.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- 🎯 Mock Interview Platform
+- 🤖 AI-Powered Questions
+- 📊 Performance Analytics
+- 🎨 Modern UI Design
+- 🔐 User Authentication
+- 🔄 Password Reset with OTP
 
-**Use Lovable**
+## Tech Stack
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ffa4bd3c-b41f-4081-90b0-2687c3229cd2) and start prompting.
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui
+- **State Management**: React Query
+- **Routing**: React Router
+- **Authentication**: Supabase Auth
+- **Database**: Supabase
+- **Backend**: Node.js, Express (for OTP functionality)
+- **Deployment**: Vercel
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Set up environment variables (see `.env.example`)
+4. Start development server: `npm run dev`
 
 **Edit a file directly in GitHub**
 

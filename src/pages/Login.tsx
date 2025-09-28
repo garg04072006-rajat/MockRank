@@ -52,11 +52,22 @@ const Login = () => {
     e.preventDefault();
     setIsLoading(true);
     
-    const { error } = await signUp(signupForm.email, signupForm.password, {
+    const { error, data } = await signUp(signupForm.email, signupForm.password, {
       first_name: signupForm.firstName,
       last_name: signupForm.lastName,
       phone: signupForm.phone,
     });
+    
+    // If signup successful, try to auto-login
+    if (!error && data?.user) {
+      // Small delay to ensure user is created
+      setTimeout(async () => {
+        const { error: loginError } = await signIn(signupForm.email, signupForm.password);
+        if (!loginError) {
+          navigate("/dashboard");
+        }
+      }, 1000);
+    }
     
     setIsLoading(false);
   };
