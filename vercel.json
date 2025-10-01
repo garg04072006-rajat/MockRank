@@ -9,37 +9,22 @@
       }
     }
   ],
-  "routes": [
+  "rewrites": [
     {
-      "src": "/assets/(.*)",
-      "headers": {
-        "cache-control": "max-age=31536000, immutable"
-      }
+      "source": "/login",
+      "destination": "/index.html"
     },
     {
-      "src": "/(favicon\\.ico|robots\\.txt|sitemap\\.xml)",
-      "headers": {
-        "cache-control": "max-age=86400"
-      }
+      "source": "/dashboard",
+      "destination": "/index.html"
     },
     {
-      "handle": "filesystem"
+      "source": "/interview",
+      "destination": "/index.html"
     },
     {
-      "src": "/login",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/interview",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/((?!api|_next|_static|favicon.ico|robots.txt|assets/).*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
