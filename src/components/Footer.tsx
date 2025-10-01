@@ -4,8 +4,6 @@ import {
   Twitter, 
   Linkedin, 
   Mail, 
-  MapPin, 
-  Phone,
   Heart
 } from "lucide-react";
 
@@ -85,21 +83,22 @@ const Footer = () => {
             </div>
           </div>
           
-          {/* Contact Info */}
+          {/* Support Links */}
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-foreground">Contact</h3>
-            <div className="space-y-4">
-              <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-primary mt-0.5" />
-                <span className="text-muted-foreground">
-                  Bharatpur Road, Mahua<br />
-                  Rajasthan 283126
-                </span>
-              </div>
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-primary" />
-                <span className="text-muted-foreground">+91 98765 43210</span>
-              </div>
+            <h3 className="text-lg font-semibold text-foreground">Support</h3>
+            <div className="space-y-3">
+              <a 
+                href="#" 
+                className="block text-muted-foreground hover:text-foreground transition-smooth"
+              >
+                Help & FAQ
+              </a>
+              <a 
+                href="#" 
+                className="block text-muted-foreground hover:text-foreground transition-smooth"
+              >
+                About
+              </a>
               <div className="flex items-center space-x-3">
                 <Mail className="w-5 h-5 text-primary" />
                 <span className="text-muted-foreground">hello@mockrank.com</span>

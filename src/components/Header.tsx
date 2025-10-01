@@ -40,9 +40,6 @@ const Header = () => {
             <a href="#pricing" className="text-muted-foreground hover:text-foreground transition-smooth scroll-smooth">
               Pricing
             </a>
-            <a href="#help-faq" className="text-muted-foreground hover:text-foreground transition-smooth scroll-smooth">
-              Help & FAQ
-            </a>
           </div>
           
           <div className="flex items-center space-x-4">
