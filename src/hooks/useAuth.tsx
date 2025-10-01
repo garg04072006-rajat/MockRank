@@ -8,6 +8,7 @@ interface AuthContextType {
   session: Session | null;
   signUp: (email: string, password: string, userData: any) => Promise<{ error: any; data?: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGoogle: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   loading: boolean;
 }
@@ -133,6 +134,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const signInWithGoogle = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (error) {
+        console.error('Google sign-in error:', error);
+        toast({
+          title: "Google Sign In Error",
+          description: error.message || "Failed to sign in with Google. Please try again.",
+          variant: "destructive",
+        });
+      }
+
+      return { error };
+    } catch (error: any) {
+      console.error('Google sign-in catch error:', error);
+      toast({
+        title: "Google Sign In Error", 
+        description: error.message || "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
+      return { error };
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
@@ -154,6 +188,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     session,
     signUp,
     signIn,
+    signInWithGoogle,
     signOut,
     loading,
   };

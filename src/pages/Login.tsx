@@ -24,7 +24,7 @@ const Login = () => {
   });
   
   const { toast } = useToast();
-  const { signIn, signUp, user } = useAuth();
+  const { signIn, signUp, signInWithGoogle, user } = useAuth();
   const navigate = useNavigate();
   const [forgotOpen, setForgotOpen] = useState(false);
 
@@ -72,11 +72,20 @@ const Login = () => {
     setIsLoading(false);
   };
 
-  const handleGoogleLogin = () => {
-    toast({
-      title: "Google Login",
-      description: "Google authentication integration needed",
-    });
+  const handleGoogleLogin = async () => {
+    setIsLoading(true);
+    
+    const { error } = await signInWithGoogle();
+    
+    if (error) {
+      console.error('Google login error:', error);
+      // Error is already handled by useAuth hook with toast
+    } else {
+      // Success will be handled by auth state change
+      // User will be redirected to dashboard automatically
+    }
+    
+    setIsLoading(false);
   };
 
   return (
