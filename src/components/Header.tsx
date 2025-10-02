@@ -42,7 +42,10 @@ const Header = () => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-lg border-b border-border">
       <div className="container mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div 
+            className="flex items-center space-x-2 cursor-pointer" 
+            onClick={() => navigate(user ? "/?home=true" : "/")}
+          >
             <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-lg">M</span>
             </div>
@@ -105,7 +108,10 @@ const Header = () => {
               <SheetContent side="right" className="w-[280px] sm:w-[350px]">
                 <div className="flex flex-col space-y-6 mt-6">
                   {/* Header Logo in Mobile Menu */}
-                  <div className="flex items-center space-x-2 px-2">
+                  <div 
+                    className="flex items-center space-x-2 px-2 cursor-pointer" 
+                    onClick={() => handleNavigation(user ? "/?home=true" : "/")}
+                  >
                     <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                       <span className="text-white font-bold text-lg">M</span>
                     </div>

@@ -24,16 +24,16 @@ const Login = () => {
   });
   
   const { toast } = useToast();
-  const { signIn, signUp, signInWithGoogle, user } = useAuth();
+  const { signIn, signUp, signInWithGoogle, user, loading } = useAuth();
   const navigate = useNavigate();
   const [forgotOpen, setForgotOpen] = useState(false);
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      navigate("/dashboard");
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,7 +42,7 @@ const Login = () => {
     const { error } = await signIn(loginForm.email, loginForm.password);
     
     if (!error) {
-      navigate("/dashboard");
+      navigate("/dashboard", { replace: true });
     }
     
     setIsLoading(false);
@@ -64,7 +64,7 @@ const Login = () => {
       setTimeout(async () => {
         const { error: loginError } = await signIn(signupForm.email, signupForm.password);
         if (!loginError) {
-          navigate("/dashboard");
+          navigate("/dashboard", { replace: true });
         }
       }, 1000);
     }
@@ -87,6 +87,25 @@ const Login = () => {
     
     setIsLoading(false);
   };
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center mx-auto">
+            <span className="text-primary font-bold text-xl">M</span>
+          </div>
+          <p className="text-white">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render login if already authenticated (will redirect)
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-hero p-4 relative">

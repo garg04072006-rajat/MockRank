@@ -140,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: 'https://mock-rank.vercel.app/dashboard'
+          redirectTo: window.location.origin + '/'
         }
       });
 

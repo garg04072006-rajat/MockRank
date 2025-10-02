@@ -23,11 +23,18 @@ import {
 } from "lucide-react";
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [firstName, setFirstName] = useState<string>("");
   const fetched = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Redirect to login if not authenticated
+    if (!loading && !user) {
+      navigate("/login", { replace: true });
+      return;
+    }
+    
     if (user && !fetched.current) {
       fetched.current = true;
       supabase
@@ -39,7 +46,7 @@ const Dashboard = () => {
           if (data?.first_name) setFirstName(data.first_name);
         });
     }
-  }, [user]);
+  }, [user, loading, navigate]);
   
   const stats = {
     totalInterviews: 12,
@@ -63,7 +70,25 @@ const Dashboard = () => {
     { id: 4, title: 'Perfect Score', description: 'Score 95%+ in any interview', earned: false }
   ];
 
-  const navigate = useNavigate();
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center mx-auto">
+            <span className="text-white font-bold text-lg">M</span>
+          </div>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Don't render dashboard if no user (will redirect)
+  if (!user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -71,11 +96,11 @@ const Dashboard = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              {/* Back Button - In Flow */}
+              {/* Back Button - Go to home */}
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate("/", { replace: true })}
+                onClick={() => navigate("/?home=true")}
                 aria-label="Back to Home"
               >
                 {/* Simple left arrow icon using SVG */}
