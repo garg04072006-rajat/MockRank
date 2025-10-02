@@ -88,6 +88,12 @@ const Footer = () => {
             <h3 className="text-lg font-semibold text-foreground">Support</h3>
             <div className="space-y-3">
               <a 
+                href="/how-it-works" 
+                className="block text-muted-foreground hover:text-foreground transition-smooth"
+              >
+                How It Works
+              </a>
+              <a 
                 href="#" 
                 className="block text-muted-foreground hover:text-foreground transition-smooth"
               >
