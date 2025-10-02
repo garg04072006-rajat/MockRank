@@ -75,7 +75,7 @@ const Dashboard = () => {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/", { replace: true })}
                 aria-label="Back to Home"
               >
                 {/* Simple left arrow icon using SVG */}
