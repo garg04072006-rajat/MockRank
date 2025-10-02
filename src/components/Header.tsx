@@ -35,7 +35,13 @@ const Header = () => {
 
   const handleSignOut = async () => {
     setIsOpen(false);
-    await signOut();
+    try {
+      await signOut();
+      // Force navigation to home page after sign out
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
   };
 
   return (
@@ -81,7 +87,7 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={signOut}>
+                  <DropdownMenuItem onClick={handleSignOut}>
                     <LogOut className="h-4 w-4 mr-2" />
                     Sign Out
                   </DropdownMenuItem>

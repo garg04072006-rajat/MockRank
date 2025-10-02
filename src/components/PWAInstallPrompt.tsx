@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, X, Smartphone } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -16,6 +17,7 @@ const PWAInstallPrompt = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const { user, loading } = useAuth();
 
   useEffect(() => {
     // Check if app is already installed
@@ -60,6 +62,13 @@ const PWAInstallPrompt = () => {
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
+
+  // Hide install prompt when user is authenticated (they're already engaged)
+  useEffect(() => {
+    if (!loading && user) {
+      setShowInstallPrompt(false);
+    }
+  }, [user, loading]);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {

@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Mail, Lock, Phone, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Phone, Eye, EyeOff, Download, Smartphone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstallButton, setShowInstallButton] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: "", password: "" });
   const [signupForm, setSignupForm] = useState({
     firstName: "",
@@ -34,6 +36,33 @@ const Login = () => {
       navigate("/dashboard", { replace: true });
     }
   }, [user, loading, navigate]);
+
+  // PWA Install functionality
+  useEffect(() => {
+    // Check if app is already installed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    const isInWebAppiOS = (window.navigator as any).standalone === true;
+    
+    if (isStandalone || isInWebAppiOS) {
+      return; // Already installed
+    }
+
+    // Listen for install prompt
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+      setShowInstallButton(true);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    
+    // Show install button for browsers that don't support beforeinstallprompt
+    setShowInstallButton(true);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,6 +115,30 @@ const Login = () => {
     }
     
     setIsLoading(false);
+  };
+
+  const handleInstallApp = async () => {
+    if (deferredPrompt) {
+      // Native PWA install
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      if (outcome === 'accepted') {
+        toast({
+          title: "App Installed! 🎉",
+          description: "MockRank has been added to your home screen!",
+        });
+        setShowInstallButton(false);
+      }
+      
+      setDeferredPrompt(null);
+    } else {
+      // Manual install instructions
+      toast({
+        title: "📱 Install MockRank App",
+        description: "Tap the menu button (⋮) → 'Add to Home screen' → 'Add'",
+      });
+    }
   };
 
   // Show loading while checking authentication
@@ -238,6 +291,35 @@ const Login = () => {
                   </svg>
                   Continue with Google
                 </Button>
+
+                {/* Install App Button */}
+                {showInstallButton && (
+                  <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                      <span className="w-full border-t" />
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                      <span className="bg-background px-2 text-muted-foreground">or</span>
+                    </div>
+                  </div>
+                )}
+
+                {showInstallButton && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleInstallApp}
+                    className="w-full border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-colors"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2">
+                        <Smartphone className="h-4 w-4 text-primary" />
+                        <Download className="h-3 w-3 text-primary" />
+                      </div>
+                      <span>Install MockRank App</span>
+                    </div>
+                  </Button>
+                )}
               </TabsContent>
               
               <TabsContent value="signup" className="space-y-4">
@@ -326,6 +408,35 @@ const Login = () => {
                     {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
                 </form>
+
+                {/* Install App Button */}
+                {showInstallButton && (
+                  <div className="mt-4 space-y-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t" />
+                      </div>
+                      <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-background px-2 text-muted-foreground">or</span>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleInstallApp}
+                      className="w-full border-primary/20 hover:bg-primary/5 hover:border-primary/40 transition-colors"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2">
+                          <Smartphone className="h-4 w-4 text-primary" />
+                          <Download className="h-3 w-3 text-primary" />
+                        </div>
+                        <span>Install MockRank App</span>
+                      </div>
+                    </Button>
+                  </div>
+                )}
               </TabsContent>
             </Tabs>
           </CardContent>
