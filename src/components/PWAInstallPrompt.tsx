@@ -27,20 +27,25 @@ const PWAInstallPrompt = () => {
       return;
     }
 
+    // Check if dismissed recently (24 hours for production)
+    const dismissedTime = localStorage.getItem('pwa-install-dismissed');
+    if (dismissedTime && Date.now() - parseInt(dismissedTime) < 24 * 60 * 60 * 1000) {
+      return;
+    }
+
+    // Show install prompt after 5 seconds for better UX
+    const timer = setTimeout(() => {
+      setShowInstallPrompt(true);
+    }, 5000);
+
     // Listen for PWA install prompt
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      
-      // Don't show immediately, wait for user interaction
-      setTimeout(() => {
-        setShowInstallPrompt(true);
-      }, 5000); // Show after 5 seconds
     };
 
     // Listen for app installed event
     const handleAppInstalled = () => {
-      console.log('PWA was installed');
       setShowInstallPrompt(false);
       setIsInstalled(true);
       setDeferredPrompt(null);
@@ -50,29 +55,25 @@ const PWAInstallPrompt = () => {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
+      clearTimeout(timer);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    // Show the install prompt
-    deferredPrompt.prompt();
-
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+    if (deferredPrompt) {
+      // Native PWA install
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      
+      setDeferredPrompt(null);
+      setShowInstallPrompt(false);
     } else {
-      console.log('User dismissed the install prompt');
+      // Manual install instructions
+      alert(`📱 Install MockRank App:\n\n1. Tap the menu button (⋮) in your browser\n2. Select "Add to Home screen"\n3. Tap "Add" to install\n\n✨ Enjoy faster access and offline support!`);
+      setShowInstallPrompt(false);
     }
-
-    // Clear the deferredPrompt
-    setDeferredPrompt(null);
-    setShowInstallPrompt(false);
   };
 
   const handleDismiss = () => {
@@ -81,15 +82,25 @@ const PWAInstallPrompt = () => {
     localStorage.setItem('pwa-install-dismissed', Date.now().toString());
   };
 
-  // Don't show if already installed or dismissed recently
+  const handleRemindLater = () => {
+    setShowInstallPrompt(false);
+    // Show again after 2 hours
+    localStorage.setItem('pwa-install-dismissed', (Date.now() - 22 * 60 * 60 * 1000).toString());
+  };
+
+  // Don't show if already installed
   if (isInstalled) return null;
 
+  // Don't show if dismissed recently (24 hours)
   const dismissedTime = localStorage.getItem('pwa-install-dismissed');
   if (dismissedTime && Date.now() - parseInt(dismissedTime) < 24 * 60 * 60 * 1000) {
     return null;
   }
 
-  if (!showInstallPrompt || !deferredPrompt) return null;
+  // Show prompt if timer has triggered
+  if (!showInstallPrompt) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 max-w-sm mx-auto">
