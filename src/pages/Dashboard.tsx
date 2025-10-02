@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import SettingsDialog from "@/components/SettingsDialog";
 import { 
   Trophy, 
   Target, 
@@ -18,14 +17,12 @@ import {
   Star,
   Play,
   FileText,
-  Settings,
   LogOut,
   Mic,
   BarChart3
 } from "lucide-react";
 
 const Dashboard = () => {
-  const [selectedGoal, setSelectedGoal] = useState<'placement' | 'ias'>('placement');
   const { user } = useAuth();
   const [firstName, setFirstName] = useState<string>("");
   const fetched = useRef(false);
@@ -73,12 +70,11 @@ const Dashboard = () => {
       <header className="border-b border-border bg-card relative">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              {/* Back Button */}
+            <div className="flex items-center space-x-3">
+              {/* Back Button - In Flow */}
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute left-4 top-4 z-10"
                 onClick={() => navigate("/")}
                 aria-label="Back to Home"
               >
@@ -87,7 +83,7 @@ const Dashboard = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
               </Button>
-              <div className="flex items-center space-x-2 ml-12">
+              <div className="flex items-center space-x-2">
                 <div className="w-8 h-8 gradient-primary rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">M</span>
                 </div>
@@ -95,11 +91,6 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <SettingsDialog>
-                <Button variant="ghost" size="icon">
-                  <Settings className="h-5 w-5" />
-                </Button>
-              </SettingsDialog>
               <Avatar>
                 <AvatarImage src="/placeholder-avatar.jpg" />
                 <AvatarFallback>RK</AvatarFallback>
@@ -128,25 +119,7 @@ const Dashboard = () => {
                 </Badge>
               </div>
               
-              {/* Goal Selection */}
-              <div className="flex space-x-4">
-                <Button
-                  variant={selectedGoal === 'placement' ? 'default' : 'outline'}
-                  onClick={() => setSelectedGoal('placement')}
-                  className="flex items-center space-x-2"
-                >
-                  <Target className="h-4 w-4" />
-                  <span>Placement</span>
-                </Button>
-                <Button
-                  variant={selectedGoal === 'ias' ? 'default' : 'outline'}
-                  onClick={() => setSelectedGoal('ias')}
-                  className="flex items-center space-x-2"
-                >
-                  <Trophy className="h-4 w-4" />
-                  <span>IAS Prep</span>
-                </Button>
-              </div>
+
             </div>
 
             {/* Quick Actions */}

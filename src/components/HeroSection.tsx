@@ -7,7 +7,67 @@ const HeroSection = () => {
   return (
     <section className="pt-24 pb-16 px-4">
       <div className="container mx-auto">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        {/* Mobile Layout (Vertical) */}
+        <div className="lg:hidden space-y-8 text-center">
+          {/* Badge and Headline */}
+          <div className="space-y-4">
+            <Badge className="gradient-secondary text-white border-0">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI-Powered Interview Coaching
+            </Badge>
+            
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+              Master Your{" "}
+              <span className="gradient-hero bg-clip-text text-transparent">
+                Interview Skills
+              </span>{" "}
+              with AI
+            </h1>
+          </div>
+          
+          {/* Image Right After Headline - Mobile Only */}
+          <div className="relative max-w-3xl mx-auto">
+            <div className="absolute inset-0 gradient-hero rounded-3xl blur-3xl opacity-20"></div>
+            <img 
+              src={heroImage} 
+              alt="AI-powered mock interview session showing confidence analysis and real-time feedback"
+              className="relative w-full h-auto rounded-3xl shadow-strong"
+            />
+          </div>
+          
+          {/* Description Below Image */}
+          <p className="text-xl text-muted-foreground leading-relaxed">
+            Get personalized mock interviews for placements and IAS exams. 
+            Receive real-time feedback on confidence, communication, and knowledge 
+            to ace your next interview.
+          </p>
+          
+          {/* Buttons Below Description */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="gradient-primary text-white border-0 hover:shadow-glow transition-smooth" onClick={() => window.location.href = '/login'}>
+              <Play className="w-5 h-5 mr-2" />
+              Start Mock Interview
+            </Button>
+            <Button size="lg" variant="outline" className="border-primary text-primary hover:bg-primary hover:text-white transition-smooth">
+              Watch Demo
+            </Button>
+          </div>
+          
+          {/* Badges Below Buttons */}
+          <div className="flex items-center justify-center space-x-8 pt-4">
+            <div className="flex items-center space-x-2">
+              <Target className="w-5 h-5 text-primary" />
+              <span className="text-sm text-muted-foreground">Placement Ready</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Trophy className="w-5 h-5 text-accent" />
+              <span className="text-sm text-muted-foreground">IAS Preparation</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout (Side by Side) */}
+        <div className="hidden lg:grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
               <Badge className="gradient-secondary text-white border-0">
