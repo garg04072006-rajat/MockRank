@@ -4,65 +4,64 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
-  Mic, 
-  MicOff, 
-  Video, 
-  VideoOff, 
   Volume2, 
-  Settings,
   Clock,
   Brain,
   BarChart3,
   MessageSquare,
   Pause,
   Play,
-  Square,
-  Focus
+  Square
 } from "lucide-react";
 
-type InterviewPhase = 'setup' | 'active' | 'completed';
-type InterviewerPersona = 'hr-manager' | 'tech-lead' | 'startup-founder' | 'ias-officer';
+type InterviewPhase = 'type-selection' | 'active' | 'completed';
+type InterviewType = 'placement' | 'government' | 'technical' | 'behavioral';
 
 const MockInterview = () => {
-  const [phase, setPhase] = useState<InterviewPhase>('setup');
+  const [phase, setPhase] = useState<InterviewPhase>('type-selection');
   const navigate = useNavigate();
-  const [selectedPersona, setSelectedPersona] = useState<InterviewerPersona>('hr-manager');
+  const [selectedType, setSelectedType] = useState<InterviewType>('placement');
   const [isRecording, setIsRecording] = useState(false);
-  const [isMicOn, setIsMicOn] = useState(true);
-  const [isVideoOn, setIsVideoOn] = useState(true); // Camera is compulsory - always on
+
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [confidenceLevel, setConfidenceLevel] = useState(72);
   const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [movementDetected, setMovementDetected] = useState(false);
-  const [interviewFailed, setInterviewFailed] = useState(false);
-  const [cameraFocus, setCameraFocus] = useState(50); // Focus level 0-100
+
+
   
-  const personas = {
-    'hr-manager': {
-      name: 'Sarah Johnson',
-      title: 'HR Manager at TechCorp',
-      avatar: '/placeholder-avatar.jpg',
-      description: 'Experienced in behavioral and cultural fit assessments'
+  const interviewTypes = {
+    'placement': {
+      title: 'Placement Interview',
+      subtitle: 'Job & Internship Preparation',
+      description: 'Practice for corporate job interviews, technical rounds, and HR discussions',
+      icon: '💼',
+      color: 'bg-blue-500',
+      questions: ['Tell me about yourself', 'Why should we hire you?', 'What are your strengths?']
     },
-    'tech-lead': {
-      name: 'Elon Musk',
-      title: 'American Buisnessmen',
-      avatar: '/placeholder-avatar.jpg',
-      description: 'Focuses on technical skills and problem-solving'
+    'government': {
+      title: 'Government Jobs',
+      subtitle: 'IAS, IPS, SSC & Bank Exams',
+      description: 'Prepare for government sector interviews, ethics, and current affairs',
+      icon: '🏛️',
+      color: 'bg-green-500',
+      questions: ['Discuss current economic policies', 'What is your view on governance?', 'Handle ethical dilemmas']
     },
-    'startup-founder': {
-      name: 'Sunder Pichai',
-      title: 'Google CEO',
-      avatar: '/placeholder-avatar.jpg',
-      description: 'Entrepreneur mindset with diverse questioning style'
+    'technical': {
+      title: 'Technical Interview',
+      subtitle: 'Coding & Problem Solving',
+      description: 'Focus on programming, algorithms, system design, and technical concepts',
+      icon: '💻',
+      color: 'bg-purple-500',
+      questions: ['Explain data structures', 'Solve coding problems', 'Design systems']
     },
-    'ias-officer': {
-      name: 'Dr. Rajesh Kumar',
-      title: 'Retired IAS Officer',
-      avatar: '/placeholder-avatar.jpg',
-      description: 'Expert in ethics, current affairs, and personality assessment'
+    'behavioral': {
+      title: 'Behavioral Interview',
+      subtitle: 'Personality & Soft Skills',
+      description: 'Work on communication, leadership, teamwork, and situational responses',
+      icon: '🤝',
+      color: 'bg-orange-500',
+      questions: ['Describe teamwork experience', 'Handle difficult situations', 'Leadership examples']
     }
   };
 
@@ -90,7 +89,7 @@ const MockInterview = () => {
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (phase === 'active' && isRecording && !interviewFailed) {
+    if (phase === 'active' && isRecording) {
       interval = setInterval(() => {
         setTimeElapsed(prev => prev + 1);
         // Simulate confidence fluctuation
@@ -98,19 +97,10 @@ const MockInterview = () => {
           const change = (Math.random() - 0.5) * 10;
           return Math.max(40, Math.min(95, prev + change));
         });
-        
-        // Simulate movement detection (20% chance every 5 seconds)
-        if (timeElapsed > 0 && timeElapsed % 5 === 0 && Math.random() > 0.8) {
-          setMovementDetected(true);
-          setTimeout(() => {
-            setInterviewFailed(true);
-            setIsRecording(false);
-          }, 2000);
-        }
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [phase, isRecording, interviewFailed, timeElapsed]);
+  }, [phase, isRecording]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -128,7 +118,7 @@ const MockInterview = () => {
     setIsRecording(false);
   };
 
-  if (phase === 'setup') {
+  if (phase === 'type-selection') {
     return (
       <div className="min-h-screen bg-background p-4">
         <div className="container mx-auto max-w-4xl">
@@ -156,50 +146,60 @@ const MockInterview = () => {
                 <span className="text-2xl font-bold text-foreground">MockRank</span>
               </div>
               
-              <h1 className="text-3xl font-bold">Mock Interview Setup</h1>
-              <p className="text-muted-foreground">Select your interviewer and get ready to practice</p>
+              <h1 className="text-3xl font-bold mb-2">Choose Interview Type</h1>
+              <p className="text-muted-foreground">Select the type of interview you want to practice</p>
             </div>
 
-            {/* Persona Selection */}
+            {/* Interview Type Selection */}
             <Card className="shadow-soft">
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Brain className="h-5 w-5" />
-                  <span>Choose Your Interviewer</span>
+                  <span>Select Interview Type</span>
                 </CardTitle>
                 <CardDescription>
-                  Different personas will ask different types of questions
+                  Choose the type of interview practice you need
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid md:grid-cols-2 gap-4">
-                  {Object.entries(personas).map(([key, persona]) => (
+                  {Object.entries(interviewTypes).map(([key, type]) => (
                     <Card
                       key={key}
                       className={`cursor-pointer transition-smooth ${
-                        selectedPersona === key 
+                        selectedType === key 
                           ? 'ring-2 ring-primary bg-primary/5' 
                           : 'hover:shadow-medium'
                       }`}
-                      onClick={() => setSelectedPersona(key as InterviewerPersona)}
+                      onClick={() => setSelectedType(key as InterviewType)}
                     >
                       <CardHeader className="pb-2">
                         <div className="flex items-center space-x-3">
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage src={persona.avatar} />
-                            <AvatarFallback>{persona.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <h3 className="font-semibold">{persona.name}</h3>
-                            <p className="text-sm text-muted-foreground">{persona.title}</p>
+                          <div className="w-12 h-12 flex items-center justify-center text-2xl bg-muted rounded-lg">
+                            {type.icon}
                           </div>
-                          {selectedPersona === key && (
+                          <div className="flex-1">
+                            <h3 className="font-semibold">{type.title}</h3>
+                            <p className="text-sm text-muted-foreground">{type.subtitle}</p>
+                          </div>
+                          {selectedType === key && (
                             <Badge className="gradient-primary text-white border-0">Selected</Badge>
                           )}
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-sm text-muted-foreground">{persona.description}</p>
+                        <p className="text-sm text-muted-foreground mb-2">{type.description}</p>
+                        <div className="text-xs text-muted-foreground">
+                          <strong>Sample Questions:</strong>
+                          <ul className="mt-1 space-y-1">
+                            {type.questions.map((question, idx) => (
+                              <li key={idx} className="flex items-start space-x-2">
+                                <span>•</span>
+                                <span>{question}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       </CardContent>
                     </Card>
                   ))}
@@ -207,97 +207,57 @@ const MockInterview = () => {
               </CardContent>
             </Card>
 
-            {/* Technical Setup */}
+            {/* Interview Instructions */}
             <Card className="shadow-soft">
               <CardHeader>
-                <CardTitle>Camera & Microphone Check</CardTitle>
-                <CardDescription>Make sure your devices are working properly</CardDescription>
+                <CardTitle>Interview Instructions</CardTitle>
+                <CardDescription>Important guidelines for your practice session</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid md:grid-cols-2 gap-8">
-                  <div className="space-y-4">
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                      {isVideoOn ? (
-                        <div className="text-center">
-                          <Video className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                          <p className="text-sm text-muted-foreground">Camera Preview</p>
-                        </div>
-                      ) : (
-                        <div className="text-center">
-                          <VideoOff className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                          <p className="text-sm text-muted-foreground">Camera Off</p>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex justify-center space-x-4">
-                      <Button
-                        variant="default"
-                        size="icon"
-                        disabled
-                        className="opacity-50"
-                      >
-                        <Video className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant={isMicOn ? 'default' : 'outline'}
-                        size="icon"
-                        onClick={() => setIsMicOn(!isMicOn)}
-                      >
-                        {isMicOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-                      </Button>
-                    </div>
-                    <p className="text-xs text-center text-muted-foreground mt-2">
-                      Camera must remain on during interview
-                    </p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Microphone Level</span>
-                        <span className="text-sm text-muted-foreground">Good</span>
-                      </div>
-                      <Progress value={75} className="h-2" />
+                <div className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-6">
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm">During the Interview:</h4>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        <li className="flex items-start space-x-2">
+                          <span className="text-green-500">✓</span>
+                          <span>Speak clearly and at a moderate pace</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-green-500">✓</span>
+                          <span>Take your time to think before answering</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-green-500">✓</span>
+                          <span>Use the STAR method for behavioral questions</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-green-500">✓</span>
+                          <span>Ask clarifying questions if needed</span>
+                        </li>
+                      </ul>
                     </div>
                     
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium">Internet Speed</span>
-                        <span className="text-sm text-muted-foreground">Excellent</span>
-                      </div>
-                      <Progress value={90} className="h-2" />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-medium flex items-center gap-1">
-                          <Focus className="w-4 h-4" />
-                          Camera Focus
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {cameraFocus > 70 ? 'Sharp' : cameraFocus > 40 ? 'Good' : 'Needs Adjustment'}
-                        </span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Progress value={cameraFocus} className="h-2 flex-1" />
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setCameraFocus(Math.min(100, cameraFocus + 10))}
-                        >
-                          Focus
-                        </Button>
-                      </div>
-                    </div>
-                    
-                    <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-accent rounded-full"></div>
-                        <span className="text-sm font-medium text-accent">All systems ready</span>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Your setup looks good for the interview
-                      </p>
+                    <div className="space-y-3">
+                      <h4 className="font-medium text-sm">Best Practices:</h4>
+                      <ul className="text-sm text-muted-foreground space-y-2">
+                        <li className="flex items-start space-x-2">
+                          <span className="text-blue-500">💡</span>
+                          <span>Maintain good posture and eye contact</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-blue-500">💡</span>
+                          <span>Prepare examples from your experience</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-blue-500">💡</span>
+                          <span>Stay calm and confident</span>
+                        </li>
+                        <li className="flex items-start space-x-2">
+                          <span className="text-blue-500">💡</span>
+                          <span>End with thoughtful questions</span>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
@@ -325,7 +285,7 @@ const MockInterview = () => {
   }
 
   if (phase === 'active') {
-    const selectedPersonaData = personas[selectedPersona];
+    const selectedTypeData = interviewTypes[selectedType];
     
     return (
       <div className="min-h-screen bg-background">
@@ -350,15 +310,6 @@ const MockInterview = () => {
               </Badge>
             </div>
             <div className="flex items-center space-x-2">
-              <Button variant="outline" size="icon" onClick={() => setIsMicOn(!isMicOn)}>
-                {isMicOn ? <Mic className="h-4 w-4" /> : <MicOff className="h-4 w-4" />}
-              </Button>
-              <Button variant="outline" size="icon" disabled className="opacity-50">
-                <Video className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Settings className="h-4 w-4" />
-              </Button>
               <Button variant="destructive" onClick={endInterview}>
                 <Square className="w-4 h-4 mr-2" />
                 End Interview
@@ -371,20 +322,14 @@ const MockInterview = () => {
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Main Interview Area */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Interviewer Video */}
+              {/* Interview Type Header */}
               <Card className="shadow-soft">
                 <CardContent className="p-0">
                   <div className="aspect-video bg-gradient-hero rounded-lg flex items-center justify-center relative overflow-hidden">
-                    <Avatar className="h-24 w-24">
-                      <AvatarImage src={selectedPersonaData.avatar} />
-                      <AvatarFallback className="text-2xl">
-                        {selectedPersonaData.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="absolute bottom-4 left-4">
-                      <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-                        {selectedPersonaData.name}
-                      </div>
+                    <div className="text-center">
+                      <div className="text-6xl mb-4">{selectedTypeData.icon}</div>
+                      <h2 className="text-2xl font-bold text-white mb-2">{selectedTypeData.title}</h2>
+                      <p className="text-white/80">{selectedTypeData.subtitle}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -421,27 +366,7 @@ const MockInterview = () => {
 
             {/* Sidebar - Real-time Analytics */}
             <div className="space-y-6">
-              {/* Candidate Video */}
-              <Card className="shadow-soft">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">You</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="aspect-video bg-muted rounded-lg flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Video className="h-8 w-8 text-muted-foreground mx-auto mb-1" />
-                      <p className="text-xs text-muted-foreground">Your Camera (Always On)</p>
-                    </div>
-                    {movementDetected && (
-                      <div className="absolute inset-0 bg-destructive/20 flex items-center justify-center">
-                        <div className="bg-destructive text-destructive-foreground px-3 py-1 rounded text-sm font-medium">
-                          Movement Detected!
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+
 
               {/* Real-time Confidence Meter */}
               <Card className="shadow-soft">
@@ -537,7 +462,7 @@ const MockInterview = () => {
             >
               View Detailed Report
             </Button>
-            <Button variant="outline" onClick={() => setPhase('setup')}>
+            <Button variant="outline" onClick={() => setPhase('type-selection')}>
               Take Another Interview
             </Button>
           </div>
