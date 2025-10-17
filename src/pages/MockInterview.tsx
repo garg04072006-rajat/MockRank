@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -21,6 +21,7 @@ type InterviewType = 'placement' | 'government' | 'technical' | 'behavioral';
 const MockInterview = () => {
   const [phase, setPhase] = useState<InterviewPhase>('type-selection');
   const navigate = useNavigate();
+  const location = useLocation();
   const [selectedType, setSelectedType] = useState<InterviewType>('placement');
   const [isRecording, setIsRecording] = useState(false);
 
@@ -63,6 +64,15 @@ const MockInterview = () => {
       color: 'bg-orange-500',
       questions: ['Describe teamwork experience', 'Handle difficult situations', 'Leadership examples']
     }
+    ,
+    'hr': {
+      title: 'HR Interview',
+      subtitle: 'Culture & Fit',
+      description: 'Questions about fit, policies, career goals, and communication skills',
+      icon: '🧑‍💼',
+      color: 'bg-indigo-500',
+      questions: ['Tell me about a time you resolved conflict', 'Why do you want to join this company?', 'Describe your ideal manager']
+    }
   };
 
   const questions = [
@@ -88,6 +98,21 @@ const MockInterview = () => {
   ];
 
   useEffect(() => {
+    // If navigated here with state from StartInterview, start active phase immediately
+    const navState = (location && (location as any).state) || null;
+    if (navState && navState.selectedType) {
+      // map selectedType to interviewTypes key
+      if (navState.selectedType in interviewTypes) {
+        setSelectedType(navState.selectedType as InterviewType);
+      }
+      // set defaults from nav state if provided
+      if (navState.duration) {
+        // optionally handle duration
+      }
+      setPhase('active');
+      setIsRecording(true);
+      return;
+    }
     let interval: NodeJS.Timeout;
     if (phase === 'active' && isRecording) {
       interval = setInterval(() => {

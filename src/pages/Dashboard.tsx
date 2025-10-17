@@ -149,7 +149,7 @@ const Dashboard = () => {
 
             {/* Quick Actions */}
             <div className="grid md:grid-cols-2 gap-4">
-              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer" onClick={() => window.location.href = '/interview'}>
+              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer" onClick={() => navigate('/start-interview')}>
                 <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                   <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center">
                     <Play className="w-6 h-6 text-white" />
@@ -160,7 +160,7 @@ const Dashboard = () => {
                   </div>
                 </CardHeader>
               </Card>
-              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer">
+              <Card className="bg-card text-card-foreground border-0 shadow-soft hover:shadow-medium transition-smooth cursor-pointer" onClick={() => navigate('/resume-options')}>
                 <CardHeader className="flex flex-row items-center space-y-0 pb-2">
                   <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center">
                     <FileText className="w-6 h-6 text-accent" />
