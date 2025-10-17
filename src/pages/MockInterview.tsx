@@ -314,8 +314,8 @@ const MockInterview = () => {
     
     return (
       <div className="min-h-screen bg-background">
-        {/* Header with Controls */}
-        <div className="bg-card border-b border-border p-4">
+        {/* Header with Controls - sticky on top to prevent mobile layout shift */}
+        <div className="bg-card border-b border-border p-4 sticky top-0 z-20">
           <div className="container mx-auto flex items-center justify-between">
             <div className="flex items-center space-x-4">
               {/* MockRank Logo */}
@@ -334,7 +334,7 @@ const MockInterview = () => {
                 Question {currentQuestion} of {questions.length}
               </Badge>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="hidden md:flex items-center space-x-2">
               <Button variant="destructive" onClick={endInterview}>
                 <Square className="w-4 h-4 mr-2" />
                 End Interview
@@ -343,7 +343,8 @@ const MockInterview = () => {
           </div>
         </div>
 
-        <div className="container mx-auto p-4">
+        {/* Main content - add bottom padding so fixed mobile button doesn't cover content */}
+  <div className="container mx-auto p-4 pb-8">
           <div className="grid lg:grid-cols-3 gap-6">
             {/* Main Interview Area */}
             <div className="lg:col-span-2 space-y-6">
@@ -443,6 +444,12 @@ const MockInterview = () => {
               </Card>
             </div>
           </div>
+        </div>
+        {/* Mobile-only in-page End Interview button (scrolls with content) */}
+        <div className="md:hidden text-center mt-6">
+          <button onClick={endInterview} className="px-6 py-3 bg-destructive text-white rounded shadow-lg">
+            End Interview
+          </button>
         </div>
       </div>
     );

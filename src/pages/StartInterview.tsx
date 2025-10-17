@@ -14,6 +14,7 @@ const StartInterview: React.FC = () => {
 
   const next = () => setStep((s) => Math.min(4, s + 1));
   const back = () => setStep((s) => Math.max(0, s - 1));
+  const [showDifficultyPicker, setShowDifficultyPicker] = useState(false);
 
   const typeOptions: { key: string; label: string }[] = [
     { key: 'technical', label: 'Technical' },
@@ -101,14 +102,62 @@ const StartInterview: React.FC = () => {
         {step === 1 && (
           <div>
             <h3 className="font-medium mb-2">Difficulty & Duration</h3>
+            {/* Difficulty selector - desktop (buttons) */}
             <div className="flex items-center gap-4 mb-4">
               <label className="text-sm">Difficulty:</label>
-              <div className="space-x-2">
+              <div className="space-x-2 hidden md:inline-flex">
                 {['Beginner','Intermediate','Advanced'].map((d) => (
                   <button key={d} onClick={() => setDifficulty(d)} className={`px-3 py-1 rounded ${difficulty===d? 'bg-primary text-white' : 'bg-muted/10'}`}>{d}</button>
                 ))}
               </div>
+
+              {/* Mobile compact box - shows selected difficulty and inverted triangle */}
+              <div className="md:hidden">
+                <button
+                  onClick={() => setShowDifficultyPicker(true)}
+                  className="flex items-center gap-2 px-3 py-2 rounded border border-border bg-muted/5"
+                >
+                  <span className="font-medium">{difficulty}</span>
+                  <svg className="w-4 h-4 text-muted-foreground" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.29a.75.75 0 01.02-1.08z" />
+                  </svg>
+                </button>
+              </div>
             </div>
+
+            {/* Mobile full-screen difficulty picker modal/page */}
+            {showDifficultyPicker && (
+              <div className="fixed inset-0 z-50 bg-background/95 p-6 md:hidden">
+                <div className="flex items-center justify-between mb-6">
+                  <button onClick={() => setShowDifficultyPicker(false)} className="px-3 py-1 rounded border">Back</button>
+                  <div className="text-lg font-semibold">Select Difficulty</div>
+                  <div style={{ width: 48 }} />
+                </div>
+                <div className="space-y-4">
+                  {['Beginner','Intermediate','Advanced'].map((d) => (
+                    <button
+                      key={d}
+                      onClick={() => { setDifficulty(d); setShowDifficultyPicker(false); }}
+                      className={`w-full text-left p-4 rounded border ${difficulty===d ? 'border-primary bg-primary/10' : 'border-border'}`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="font-medium">{d}</div>
+                          <div className="text-xs text-muted-foreground mt-1">Select {d} difficulty</div>
+                        </div>
+                        <div>
+                          {difficulty === d ? (
+                            <svg className="w-5 h-5 text-primary" viewBox="0 0 20 20" fill="currentColor"><path d="M16.707 5.293a1 1 0 00-1.414 0L8 12.586 4.707 9.293a1 1 0 00-1.414 1.414l4 4a1 1 0 001.414 0l8-8a1 1 0 000-1.414z"/></svg>
+                          ) : (
+                            <div className="w-5 h-5" />
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mb-4">
               <label className="text-sm block mb-2">Duration (minutes)</label>
